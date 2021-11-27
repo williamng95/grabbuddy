@@ -28,6 +28,7 @@ const NavBar = () => {
     loginWithRedirect,
     logout,
   } = useAuth0();
+
   const toggle = () => setIsOpen(!isOpen);
 
   const logoutWithRedirect = () =>
@@ -36,7 +37,7 @@ const NavBar = () => {
     });
 
   return (
-    <div className="nav-container">
+    <div className="nav-container fixed-top" style={{"min-height":""}}>
       <Navbar color="light" light expand="md">
         <Container>
           <NavbarBrand className="logo" />

@@ -7,6 +7,7 @@ const jwksRsa = require("jwks-rsa");
 const authConfig = require("./src/auth_config.json");
 const { Client } = require('pg');
 const app = express();
+require('dotenv').config();
 
 const port = process.env.API_PORT || 3001;
 const appPort = process.env.SERVER_PORT || 3000;
@@ -24,6 +25,7 @@ if (
   process.exit();
 }
 
+console.log(process.env.REACT_APP_DATABASE_URL);
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors({ origin: appOrigin }));
@@ -44,7 +46,7 @@ const checkJwt = jwt({
 app.get("/api/external", checkJwt, (req, res) => {
   
   const client = new Client({
-    connectionString: "postgres://mlmysswstlaavq:713492640002f0a72b562d04e58f4b5fd0c7e9c9f382af82b2867c5f5b8228c9@ec2-107-23-213-65.compute-1.amazonaws.com:5432/df813rtuctf396",
+    connectionString: process.env.REACT_APP_DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }});  
@@ -58,7 +60,7 @@ app.get("/api/external", checkJwt, (req, res) => {
     //res.setHeader('Content-Type', 'application/json');
     //res.json(result.rows);
     //client.end();
-
+    
     res.send({
       msg: `Your access token was successfully validated! ${JSON.stringify(result.rows)}`,
     });

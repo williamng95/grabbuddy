@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 
-import Hero from "../components/HomeHero";
-import Content from "../components/Content";
+import BalanceHero from "../components/BalanceHero";
+import BalanceContent from "../components/BalanceContent";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const Home = () => {
@@ -12,8 +12,8 @@ const Home = () => {
   return (
   (!isAuthenticated)? loginWithRedirect() : (
   <Fragment>
-    <Hero />
-    <Content />
+    <BalanceHero />
+    <BalanceContent />
   </Fragment>
     )
 );

@@ -13,7 +13,7 @@ const Hero = () => {
   } = useAuth0();
 
   return(
-  <div className="text-center hero p-5" style={{"max-width":"100%"}}>
+  <div className="text-center hero p-5" style={{"maxWidth":"100%"}}>
     {/* <img className="mb-3 app-logo" src={logo} alt="React logo" width="120" />
     <h1 className="mb-4">Grab Buddy</h1>
 
@@ -23,6 +23,7 @@ const Hero = () => {
     </p> */}
 
   {isAuthenticated && (
+
       <div className="container-fluid">
       <div className="d-flex flex-row justify-content-center mx-auto">
         <div className="d-flex flex-column justify-content-center p-2" style={{gap: "1rem"}}>
@@ -36,6 +37,7 @@ const Hero = () => {
         </div>
       </div>
     </div>
+
   )}
 
   </div>
