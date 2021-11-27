@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "npm-run-all --parallel spa",
+    "start": "npm-run-all --parallel spa api-server",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
     "eject": "react-scripts eject",
-    "spa": "react-scripts start",
+    "spa": "serve -s build",
     "server": "node server.js",
     "server:dev": "nodemon server.js",
     "api-server": "node api-server.js",
@@ -36,7 +36,8 @@
     "react-placeholder-image": "^0.1.8",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
-    "reactstrap": "^8.0.0"
+    "reactstrap": "^8.0.0",
+    "serve": "^13.0.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.10.1",
