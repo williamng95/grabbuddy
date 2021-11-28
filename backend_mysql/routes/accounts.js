@@ -45,7 +45,7 @@ router.post('/create_account', function (req, res, next) {
 })
 
 // accounts by user id
-router.get('/by_uid', function (req, res, next) {
+router.get('/by_owner_id', function (req, res, next) {
     var uid = req.query.owner_id
     if (!uid) {
         res.status(400).send('no owner id found')
@@ -57,25 +57,25 @@ router.get('/by_uid', function (req, res, next) {
 })
 
 // get balance by owner id
-router.get('/balance_by_uid', function (req, res, next) {
+router.get('/balance_by_owner_id', function (req, res, next) {
     var id = req.query.owner_id
     if (!id) {
         res.status(400).send('no account id found')
     }
     else {
-        query(`select wallet_balance from accounts where id=${id}`, res)
+        query(`select wallet_balance from accounts where owner_id=${id}`, res)
     }
 
 })
 
 // accounts by account id
 router.get('/by_id', function (req, res, next) {
-    var uid = req.query.account_id
-    if (!uid) {
+    var id = req.query.account_id
+    if (!id) {
         res.status(400).send('no owner id found')
     }
     else {
-        query(`select * from accounts where id=${uid}`, res)
+        query(`select * from accounts where id=${id}`, res)
     }
 
 })

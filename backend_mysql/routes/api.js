@@ -26,11 +26,11 @@ router.get('/', function (req, res, next) {
       <li> other possible fields: wallet_limit, wallet_balance, restricted_transactions, allowed_transactions
       </ul>
     </li>
-    <li> GET /by_uid list account details under current owner</li>
+    <li> GET /by_owner_id list account details under current owner</li>
       <ul>
       <li> query: owner_uid</li>
       </ul>
-    <li> GET /balance_by_uid account balances for current owner</li>
+    <li> GET /balance_by_owner_id account balances for current owner</li>
       <ul>
       <li> query: owner_id</li>
       </ul>    
