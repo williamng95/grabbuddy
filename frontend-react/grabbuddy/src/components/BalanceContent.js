@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, } from "react";
 
 import { Row, Col } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,39 +15,94 @@ import { Progress, Container } from "reactstrap";
 
 
 
-class Content extends Component {
 
+class Content extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      transactionData:[],
+      total:0,
+      gameTotal:0,
+      foodTotal:0,
+      transferTotal:0,
+      othersTotal:0
+    }
+  }
+  
+
+
+componentDidMount() {
+    fetch('https://api-test-buddy.glitch.me/api/transactions/all')
+      .then(response => response.json())
+      .then(data => { console.log(data);
+        this.setState({
+          transactionData: data
+        }, ()=>{console.log(this.state.transactionData)
+        });
+  });
+}
+
+calculateTotal(){
+  let total = 0;
+  for(var i=0;i<this.state.transactionData.length;i++){
+    total += this.state.transactionData[i].transaction_amount;
+  }
+  return total;
+}
+
+
+calculateGameTotal(){
+  let total = 0;
+  for(var i=0;i<this.state.transactionData.length;i++){
+    if(this.state.transactionData[i].category === "GAME")
+    total += this.state.transactionData[i].transaction_amount;
+  }
+  return total;
+}
+
+calculateFoodTotal(){
+  let total = 0;
+  for(var i=0;i<this.state.transactionData.length;i++){
+    if(this.state.transactionData[i].category === "FOOD")
+    total += this.state.transactionData[i].transaction_amount;
+  }
+  return total;
+}
+
+calculateOthersTotal(){
+
+  return this.calculateTotal() - this.calculateFoodTotal() - this.calculateGameTotal();
+}
   
   render() {
+
 
   
     return (
         <div className="next-steps p-5">
         <Card className="text-center mb-5 h-100 w-100'"  style={{cursor : 'pointer' }}>
           
-          <CardHeader className="">You have spent {"$32"} this month!</CardHeader>
+          <CardHeader className="">You have spent $ {this.calculateTotal()} this month!</CardHeader>
           
           <Row>
             <Col></Col>
           </Row>
           <CardBody>
+          
           <Row className="d-flex justify-content-between">
             <Col>
               <CardImg  src={generatePhotoPlaceholderURL(200, 100)}></CardImg>
             </Col>
             <Col md={5} className="mb-4  align-content-between h-100 w-100">
-
-              <Progress  color="success" value="30" className="mb-4">
+              
+              <Progress  color="success" value={this.calculateGameTotal()/this.calculateTotal()*100} className="mb-4">
                 Gaming
               </Progress>
-              <Progress  color="info" value="25" className="mb-4">
+              <Progress  color="info" value={this.calculateFoodTotal()/this.calculateTotal()*100} className="mb-4">
                 Food
               </Progress>
-              <Progress  color="warning" value="20" className="mb-4">
-                Transport
-              </Progress>
-              <Progress  color="danger" value="5" className="mb-4">
-                !!
+              <Progress  color="warning" value={this.calculateOthersTotal()/this.calculateTotal()*100} className="mb-4">
+                Others
               </Progress>
             </Col>
           </Row>
@@ -57,22 +112,24 @@ class Content extends Component {
           </Card>
 
         <Row className="d-flex justify-content-between">
-          {contentData.map((col, i) => (
-            <Col key={i} md={5} className="mb-4" style={{cursor : 'pointer' }}>
-              
+          
+            <Col className="h-100 w-100" style={{cursor : 'pointer' }}>
+            {this.state.transactionData.map((col, i) => (
               <Card className="text-center mb-5 h-100 w-100'">
               
               
-                <CardHeader className="">{col.title}</CardHeader>
-
-                <CardImg  src={generatePhotoPlaceholderURL(200, 100)}></CardImg>
+                <CardHeader className="">Transaction ID {col.id}</CardHeader>
                 <CardBody>
-                  { isNaN(col.description)?col.description: ""}
+                  <Row>
+                    <Col>{}</Col>
+                    <Col>{col.category}</Col>
+                    <Col>{col.transaction_amount}</Col>
+                    </Row>
                   </CardBody>
                 <CardFooter>{col.description}</CardFooter>
               </Card>
+              ))}
             </Col>
-          ))}
         </Row>
       </div>
     );

@@ -33,7 +33,7 @@ const Hero = () => {
           
           <h1 className="p-2 text-light">Hi {user.name.toString()} !</h1>
           <img className="align-self-end filter-white" src={logo} width="400em" alt="Grab Logo"/>
-          <h2 className="p-2 text-light">Next top up is on {user.updated_at/* replace this with top-up date */}</h2> 
+          <h2 className="p-2 text-light">Next top up is on { new Date(user.updated_at).toLocaleDateString()/* replace this with top-up date */}</h2> 
         </div>
       </div>
     </div>
