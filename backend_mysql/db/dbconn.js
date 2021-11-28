@@ -33,7 +33,7 @@ function query(query_str, res){
         query_str,
         (errors, records)=>{
             if (errors) res.status(500).send('server error')
-            else res.status(200).json(records)
+            else if (res) res.status(200).json(records)
         }
     )
     return records

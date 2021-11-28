@@ -1,5 +1,5 @@
 const express = require('express');
-const {query} = require('../db/dbconn');
+const {connection, query} = require('../db/dbconn');
 
 var router = express.Router();
 var table = 'transactions';
@@ -22,6 +22,7 @@ router.get('/by-tid', function (req, res, next) {
         return;
 
     } else {
+        // console.log(check_restrictions(req.query.id))
         query(`select *
         from ${table}
         where id = ${req.query.id}`,res)
@@ -85,6 +86,12 @@ router.patch('/update',function (req, res, next) {
     }      
 });
     
+async function check_restrictions(account_id) {
+    records = await query(`select restricted_transaction 
+        from accounts 
+        where id = ${account_id}`)
+    console.log(records)
+}
 
 router.post('/add', function (req, res, next) {
     const newrow = req.body;

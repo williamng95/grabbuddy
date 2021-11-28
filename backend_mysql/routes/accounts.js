@@ -7,8 +7,10 @@ router.get('/', function (req, res, next) {
     accounts endpoints: 
     <ol>
     <li> GET /all </li>
-    <li> POST /create_account </li>
+    <li> POST (body) /create_account </li>
     <li> GET /by_uid \n </li>
+    <li> GET /balance_by_uid \n </li>
+    <li> PATCH (body) /update_limit \n </li>
     `)
 })
 // all accounts
@@ -54,8 +56,21 @@ router.get('/by_uid', function (req, res, next) {
 
 })
 
+
+// get balance by account id
+router.get('/balance_by_id', function (req, res, next) {
+    var id = req.query.account_id
+    if (!id) {
+        res.status(400).send('no account id found')
+    }
+    else {
+        query(`select wallet_balance from accounts where id=${id}`, res)
+    }
+
+})
+
 // account limits update {account_id:xxx , update:{field: value}}
-router.put('/update_limit',function (req, res, next){
+router.patch('/update_limit',function (req, res, next){
     // aallowed fields
     accountId = req.body.account_id
     var allowedFields = ['wallet_limit', 'restricted_transaction','allowed_transaction']
