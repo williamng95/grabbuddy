@@ -28,16 +28,19 @@ connection.connect((errors)=>{
     }
 )    
 
-function query(query_str, res){
-    records = connection.query(
-        query_str,
-        (errors, records)=>{
-            if (errors) res.status(500).send('server error')
-            else if (res) res.status(200).json(records)
+function query(query_str, res, callback){
+    records = connection.query(query_str, (errors, records)=>{
+        if (errors) {
+            res.status(500).send('server error')
+            return 
         }
-    )
-    return records
-}
+        if (res) {
+            res.status(200).json(records)
+        } 
+        if (callback) callback(records)
+    })
+
+    }
 
 
 module.exports={connection, query}
