@@ -1,22 +1,21 @@
 require('dotenv').config()
 const mysql = require('mysql');
 
-/*
-let connection = mysql.createConnection({
+// const properties = {
+//     host: `${process.env.DBHOST}`,
+//     port: process.env.DBPORT,
+//     user: `${process.env.DBUSER}`,
+//     password: `${process.env.DBPASSWD}`,
+//     database: `${process.env.DBNAME}`,
+//     multipleStatements: true,
+// };
+
+const properties = {
     host: process.env.HOST,
     user: process.env.USER,
     password: process.env.PASSWORD,
     port: process.env.PORT,
-    database: process.env.DATABASE
-})
-*/
-
-const properties = {
-    host: `${process.env.DBHOST}`,
-    port: process.env.DBPORT,
-    user: `${process.env.DBUSER}`,
-    password: `${process.env.DBPASSWD}`,
-    database: `${process.env.DBNAME}`,
+    database: process.env.DATABASE,
     multipleStatements: true,
 };
 
