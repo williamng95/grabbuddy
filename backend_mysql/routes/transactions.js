@@ -14,7 +14,6 @@ router.get('/all', function (req, res, next) {
     query(`select * from ${table}`, res)
 });
 
-
 router.get('/by-tid', function (req, res, next) {
     if (req.query.id.length === 0 || isNaN(req.query.id)) {
         console.log(`Invalid ID received. ID: ${req.query.id}`);
@@ -27,7 +26,6 @@ router.get('/by-tid', function (req, res, next) {
         where id = ${req.query.id}`, res)
     }
 });
-
 
 router.get('/category', function (req, res, next) {
     if (req.query.cat.length === 0) {
@@ -84,17 +82,6 @@ router.patch('/update', function (req, res, next) {
         query(querytext, res);
     }
 });
-
-function check_restrictions(account_id) {
-    let restrictions = null
-    query(`select restricted_transaction 
-        from accounts 
-        where id = ${account_id}`, null, async (records) => { restrictions = await records })
-    console.log(restrictions)
-
-
-}
-
 
 router.post('/add', function (req, res, next) {
     const newrow = req.body;
