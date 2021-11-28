@@ -4,6 +4,7 @@ const {query} = require('../db/dbconn');
 var router = express.Router();
 var table = 'transactions';
 var table2 = 'transaction_categories';
+var table3 = 'accounts';
 
 router.get('/categories', function (req, res, next) {
     query(`select * from ${table2}`,res)    
@@ -12,6 +13,7 @@ router.get('/categories', function (req, res, next) {
 router.get('/all', function (req, res, next) {
     query(`select * from ${table}`,res)    
   });
+
 
 router.get('/by-tid', function (req, res, next) {
     if (req.query.id.length === 0 || isNaN(req.query.id)) {
@@ -26,6 +28,7 @@ router.get('/by-tid', function (req, res, next) {
     }   
 });
 
+
 router.get('/category', function (req, res, next) {
     if (req.query.cat.length === 0 ) {
         console.log(`Invalid ID received. ID: ${req.query.id}`);
@@ -39,15 +42,49 @@ router.get('/category', function (req, res, next) {
     }   
 });
 
-//SELECT * FROM transaction_categories where category = 'WINE';
+router.delete('/delete', function (req, res, next) {
+    if (req.query.id.length === 0 || isNaN(req.query.id)) {
+        console.log(`Invalid ID received. ID: ${req.query.id}`);
+        res.status(400).send(`Invalid ID ${req.query.id} received.`);
+        return;
 
-/*
-router.post('/users/', createUser);
+    } else {
+        query(`DELETE
+        from ${table}
+        where id = ${req.query.id}`,res)
+    }   
+});
 
-router.delete('/users/:id', deleteUser); //index number
+router.patch('/update',function (req, res, next) {
+    const id = req.query.id;
 
-router.patch('/users/:id', updateUser); //index number
-*/
+    if (req.query.id.length === 0 || isNaN(req.query.id)) {
+        console.log(`Invalid ID received. ID: ${req.query.id}`);
+        res.status(400).send(`Invalid ID ${req.query.id} received.`);
+        return;
+    } else {
+        const newrow = req.body;
+        //check for data types
+        let fields = Object.entries(newrow);
+        let mytext=''
+        
+        for (let item=0; item < fields.length; item++) {
+            //ignore null
+            if (fields[item][1]=== null ||fields[item][1]=== undefined) {
+                //do nothing
+            } else {
+                mytext = mytext+ fields[item][0]+'=\''+fields[item][1]+'\', '
+            }  
+        }
+        //remove last comma
+        mytext = mytext.replace(/, $/," ");
+
+        const querytext = `UPDATE ${table} SET ${mytext} WHERE id=${id}`;
+            
+        query(querytext,res);
+    }      
+});
+    
 
 router.post('/add', function (req, res, next) {
     const newrow = req.body;
@@ -56,23 +93,17 @@ router.post('/add', function (req, res, next) {
         console.log('unable to process');
         return ('error');
     } else {
-        console.log('check category');
+//        console.log('check category');
 
-        catcheck= query(`select *
-        from ${table2}
-        where category = '${req.query.cat}'`,res);
-        console.log('ok here');
-        if (catcheck) {
-            const newquery = `
-            INSERT INTO ${table} (category,transaction_amount,payer_id,payee_id)
-            VALUES ('${newrow.category}','${newrow.transaction_amount}','${newrow.payer_id}','${newrow.payee_id}');`;
-            console.log(newquery);
-            query(newquery,res);
-            console.log('Data insert successful');
-            return('ok');
-        } else {
-            return ('Category not defined');
-        }
+        const newquery = `
+        INSERT INTO ${table} (category,transaction_amount,payer_id,payee_id)
+        VALUES ('${newrow.category}','${newrow.transaction_amount}','${newrow.payer_id}','${newrow.payee_id}');
+        UPDATE ${table3} SET wallet_balance = wallet_balance -${newrow.transaction_amount} WHERE id=${newrow.payer_id}; 
+        UPDATE ${table3} SET wallet_balance = wallet_balance +${newrow.transaction_amount} WHERE id=${newrow.payee_id}; 
+        `;
+   
+        query(newquery,res);
+        return('Tranasction created');
 
     }      
 });

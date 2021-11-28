@@ -17,6 +17,7 @@ const properties = {
     user: `${process.env.DBUSER}`,
     password: `${process.env.DBPASSWD}`,
     database: `${process.env.DBNAME}`,
+    multipleStatements: true,
 };
 
 // Create a connection object which will hold the connection to cloud mysql server.
@@ -32,7 +33,7 @@ function query(query_str, res){
     records = connection.query(
         query_str,
         (errors, records)=>{
-            if (errors) console.log(errors)
+            if (errors) res.status(500).send('server error')
             else res.status(200).json(records)
         }
     )
