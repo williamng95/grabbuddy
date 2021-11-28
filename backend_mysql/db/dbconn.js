@@ -40,5 +40,7 @@ function query(query_str, res){
     return records
 }
 
+
 module.exports={connection, query}
+
 
