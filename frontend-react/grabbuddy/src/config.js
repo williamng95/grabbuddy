@@ -14,6 +14,7 @@ export function getConfig() {
 
   return {
     domain: configJson.domain,
+    returnTo: process.env.PUBLIC_URL,
     clientId: configJson.clientId,
     ...(audience ? { audience } : null),
   };

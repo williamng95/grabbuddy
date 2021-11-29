@@ -23,17 +23,16 @@ const BalanceHero = () => {
     </p> */}
 
   {isAuthenticated && (
-
       <div className="container-fluid">
       <div className="d-flex flex-row justify-content-center mx-auto">
         <div className="d-flex flex-column justify-content-center p-2" style={{gap: "1rem"}}>
-          <img className="align-self-end filter-white" src={avatar} width="250rem" alt="Avatar"/>
+          <img className="align-self-end filter-white" src={avatar} width="100%" height="auto" alt="Avatar"/>
         </div>
         <div className="d-flex flex-column justify-content-flex-end align-self-end p-2 w-100 text-right"  style={{gap: "1rem"}}>
           
-          <h1 className="p-2 text-light">Hi {user.name.toString()} !</h1>
-          <img className="align-self-end filter-white" src={logo} width="400em" alt="Grab Logo"/>
-          <h2 className="p-2 text-light">Next top up is on {user.updated_at/* replace this with top-up date */}</h2> 
+          <h1 className="p-2 text-light" >Hi {user.name.toString()} !</h1>
+          <img className="align-self-center filter-white" src={logo} width="100%" height="auto" alt="Grab Logo"/>
+          <h2 className="p-2 text-light" >Next top up is on { new Date(user.updated_at).toLocaleDateString()/* replace this with top-up date */}</h2> 
         </div>
       </div>
     </div>

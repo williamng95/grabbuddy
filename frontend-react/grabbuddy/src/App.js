@@ -11,15 +11,22 @@ import balance from "./views/balance";
 import ExternalApi from "./views/ExternalApi";
 import { useAuth0 } from "@auth0/auth0-react";
 import history from "./utils/history";
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 // styles
 import "./App.css";
 
 // fontawesome
 import initFontAwesome from "./utils/initFontAwesome";
+import { ThemeProvider } from "@emotion/react";
 initFontAwesome();
 
 const App = () => {
+
+
+
+  let theme = createTheme();
+  theme = responsiveFontSizes(theme);
 
   const [user1, setUser] = useState(null);
 
@@ -49,6 +56,7 @@ useEffect(() => {
   }
 
   return (
+    <ThemeProvider theme={theme}>
     <Router history={history}>
       <div id="app" className="d-flex flex-column h-100">
         <NavBar  />
@@ -63,6 +71,7 @@ useEffect(() => {
         <Footer />
       </div>
     </Router>
+    </ThemeProvider>
   );
 };
 

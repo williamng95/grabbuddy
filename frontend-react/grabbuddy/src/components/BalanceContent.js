@@ -12,6 +12,9 @@ import { generatePhotoPlaceholderURL } from 'react-placeholder-image';
 import CardFooter from "reactstrap/lib/CardFooter";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { Progress, Container } from "reactstrap";
+import EnhancedTable from "./TransactionDataTable";
+import Chart from "react-google-charts";
+
 
 
 
@@ -25,7 +28,8 @@ class Content extends Component {
       gameTotal:0,
       foodTotal:0,
       transferTotal:0,
-      othersTotal:0
+      othersTotal:0,
+      limit:0
     }
   }
   
@@ -90,10 +94,24 @@ calculateOthersTotal(){
           <CardBody>
           
           <Row className="d-flex justify-content-between">
-            <Col>
-              <CardImg  src={generatePhotoPlaceholderURL(200, 100)}></CardImg>
+            <Col md={5}  className="mb-4 d-flex align-items-center h-100 w-100">
+            <Chart
+ 
+  chartType="PieChart"
+  loader={<div>Loading Chart</div>}
+  data={[
+    ['Spendings', 'Amount in $'],
+    ['Game', this.calculateGameTotal()],
+    ['Food', this.calculateFoodTotal()],
+    ['Others', this.calculateOthersTotal()]
+  ]}
+  options={{
+    title: 'Your Spendings Breakdown',
+  }}
+  rootProps={{ 'data-testid': '1' }}
+/>
             </Col>
-            <Col md={5} className="mb-4  align-content-between h-100 w-100">
+            <Col md={5} className="mb-4 align-items-center h-100 w-100">
               
               <Progress  color="success" value={this.calculateGameTotal()/this.calculateTotal()*100} className="mb-4">
                 Gaming
@@ -111,26 +129,7 @@ calculateOthersTotal(){
           <CardFooter></CardFooter>
           </Card>
 
-        <Row className="d-flex justify-content-between">
-          
-            <Col className="h-100 w-100" style={{cursor : 'pointer' }}>
-            {this.state.transactionData.map((col, i) => (
-              <Card className="text-center mb-5 h-100 w-100'">
-              
-              
-                <CardHeader className="">Transaction ID {col.id}</CardHeader>
-                <CardBody>
-                  <Row>
-                    <Col>{}</Col>
-                    <Col>{col.category}</Col>
-                    <Col>{col.transaction_amount}</Col>
-                    </Row>
-                  </CardBody>
-                <CardFooter>{col.description}</CardFooter>
-              </Card>
-              ))}
-            </Col>
-        </Row>
+        <EnhancedTable />
       </div>
     );
   }

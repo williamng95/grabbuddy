@@ -135,7 +135,7 @@ useEffect(() => {
                       </DropdownItem>
                       <DropdownItem
                         id="qsLogoutBtn"
-                        onClick={() => logout()}
+                        onClick={() => logout(`https://dev-atxi2549.us.auth0.com/v2/logout?returnTo=${process.env.PUBLIC_URL}`)}
                       >
                         <FontAwesomeIcon icon="power-off" className="mr-3" /> Log
                         out
@@ -151,7 +151,7 @@ useEffect(() => {
                       id="qsLoginBtn"
                       color="primary"
                       block
-                      onClick={() => logout()}
+                      onClick={() => logout(`https://dev-atxi2549.us.auth0.com/v2/logout?returnTo=${process.env.PUBLIC_URL}`)}
                     >
                       Log in
                     </Button>
@@ -188,7 +188,7 @@ useEffect(() => {
                     <RouterNavLink
                       to="#"
                       id="qsLogoutBtn"
-                      onClick={() => logout()}
+                      onClick={() => logout(`https://dev-atxi2549.us.auth0.com/v2/logout?returnTo=${process.env.PUBLIC_URL}`)}
                     >
                       Log out
                     </RouterNavLink>
