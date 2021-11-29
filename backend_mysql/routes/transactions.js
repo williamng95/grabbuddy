@@ -1,4 +1,3 @@
-const e = require('express');
 const express = require('express');
 const { connection, query } = require('../db/dbconn');
 
@@ -6,8 +5,6 @@ var router = express.Router();
 var table = 'transactions';
 var table2 = 'transaction_categories';
 var table3 = 'accounts';
-
-//api https://mydb-fafc.restdb.io/rest/people?q={"salary": {"$gt": 10000}}
 
 router.get('/category', function (req, res, next) {
     if (req.query.cat.length === 0) {
