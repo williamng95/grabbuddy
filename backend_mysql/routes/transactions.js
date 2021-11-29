@@ -42,34 +42,27 @@ router.get('/by-tid', function (req, res, next) {
 router.get('/query', function (req, res, next) {
     let querytext = '';
     let keyword = 'WHERE ';
-    if ( (isNaN(req.query.payerid)) && isNaN(req.query.payeeid) ) {
-        res.status(400).send(`Invalid ID ${req.query.payerid} ${req.query.payeeid} received.`);
-        return;
-
-    } else {
-        //process id first
-        querytext = `SELECT * FROM ${table} `
-        if (isNaN(req.query.payerid)==false) {
-            querytext = querytext + ` ${keyword} payer_id=${req.query.payerid}`
-            keyword = ' AND '
-        }    
-        if (isNaN(req.query.payeeid)==false) {
-            querytext = querytext + ` ${keyword} payee_id=${req.query.payeeid}`;
-            keyword = ' AND '
-        }
-     
-        if (isNaN(req.query.days)==false) {
-            querytext = querytext + ` ${keyword} create_time >= NOW() - INTERVAL ${req.query.days} DAY `
-            keyword = ' AND '
-       }
-
-        if ((req.query.category)) {
-            querytext = querytext + ` ${keyword} category='${req.query.category}'`;
-            keyword = ' AND '
-        }
-        query(querytext, res);
-
+    //process id first
+    querytext = `SELECT * FROM ${table} `
+    if (isNaN(req.query.payerid)==false) {
+        querytext = querytext + ` ${keyword} payer_id=${req.query.payerid}`
+        keyword = ' AND '
+    }    
+    if (isNaN(req.query.payeeid)==false) {
+        querytext = querytext + ` ${keyword} payee_id=${req.query.payeeid}`;
+        keyword = ' AND '
     }
+    
+    if (isNaN(req.query.days)==false) {
+        querytext = querytext + ` ${keyword} create_time >= NOW() - INTERVAL ${req.query.days} DAY `
+        keyword = ' AND '
+    }
+
+    if ((req.query.category)) {
+        querytext = querytext + ` ${keyword} category='${req.query.category}'`;
+        keyword = ' AND '
+    }
+    query(querytext, res);
 });
 
 //SELECT * FROM transactions WHERE create_time >= NOW() - INTERVAL 30 DAY AND payer_id=6 AND category='GAME';
