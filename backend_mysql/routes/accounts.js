@@ -21,7 +21,7 @@ router.get('/all', function (req, res, next) {
 // create account
 router.post('/create_account', function (req, res, next) {
     // minimally required fields
-    let reqFields = ['owner_id', 'type']
+    let reqFields = ['owner_id', 'type','wallet_limit','wallet_balance','restricted_transaction']
     // check all required fields are present
     if (!(reqFields.every((field)=>{
         return req.body.hasOwnProperty(field)
