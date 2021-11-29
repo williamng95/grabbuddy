@@ -122,22 +122,22 @@ router.post('/add', function (req, res, next) {
         from accounts 
         where id = ${newrow.payer_id}`, null, (restrictions) => {
             console.log(restrictions[0].restricted_transaction)
-            if (newrow.category == restrictions[0].restricted_transaction) {
-                console.log('restricted transaction')
-                res.status(400).send('restricted transaction')
-                return
-            }
-            else {
-                const newquery = `
-                INSERT INTO ${table} (category,transaction_amount,payer_id,payee_id)
-                VALUES ('${newrow.category}','${newrow.transaction_amount}','${newrow.payer_id}','${newrow.payee_id}');
-                UPDATE ${table3} SET wallet_balance = wallet_balance -${newrow.transaction_amount} WHERE id=${newrow.payer_id}; 
-                UPDATE ${table3} SET wallet_balance = wallet_balance +${newrow.transaction_amount} WHERE id=${newrow.payee_id}; 
-                `;
+                if (newrow.category == restrictions[0].restricted_transaction) {
+                    console.log('restricted transaction')
+                    res.status(400).send('restricted transaction')
+                    return
+                }
+                else {
+                    const newquery = `
+                    INSERT INTO ${table} (category,transaction_amount,payer_id,payee_id)
+                    VALUES ('${newrow.category}','${newrow.transaction_amount}','${newrow.payer_id}','${newrow.payee_id}');
+                    UPDATE ${table3} SET wallet_balance = wallet_balance -${newrow.transaction_amount} WHERE id=${newrow.payer_id}; 
+                    UPDATE ${table3} SET wallet_balance = wallet_balance +${newrow.transaction_amount} WHERE id=${newrow.payee_id}; 
+                    `;
 
-                query(newquery, res);
-                return ('Tranasction created');
-            }
+                    query(newquery, res);
+                    return ('Tranasction created');
+                }
 
         })
 
