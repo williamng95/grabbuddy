@@ -68,7 +68,7 @@ router.get('/query', function (req, res, next) {
 //SELECT * FROM transactions WHERE create_time >= NOW() - INTERVAL 30 DAY AND payer_id=6 AND category='GAME';
 
 router.delete('/delete', function (req, res, next) {
-    if (req.query.id.length === 0 || isNaN(req.query.id)) {
+    if (isNaN(req.query.id)) {
         console.log(`Invalid ID received. ID: ${req.query.id}`);
         res.status(400).send(`Invalid ID ${req.query.id} received.`);
         return;
@@ -83,7 +83,7 @@ router.delete('/delete', function (req, res, next) {
 router.patch('/update', function (req, res, next) {
     const id = req.query.id;
 
-    if (req.query.id.length === 0 || isNaN(req.query.id)) {
+    if (isNaN(req.query.id)) {
         console.log(`Invalid ID received. ID: ${req.query.id}`);
         res.status(400).send(`Invalid ID ${req.query.id} received.`);
         return;
