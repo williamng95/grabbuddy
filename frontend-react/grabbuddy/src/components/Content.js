@@ -29,8 +29,8 @@ const Content = () => {
   type: null,
   wallet_limit: 0,
   wallet_balance: 0,
-  restricted_transaction: [],
-  allowed_transaction: []}]);
+  restricted_transaction: null,
+  allowed_transaction: null}]);
 
   useEffect(() => {
     getBalance();
@@ -40,7 +40,9 @@ const Content = () => {
     async function getBalance() {
       const response = await fetch(`https://api-test-buddy.glitch.me/api/accounts/balance_by_owner_id?owner_id=${user.nickname}`);
       const data = await response.json();
+      console.log("balance");
       console.log(data);
+      if(data.length>0)
       setBalance(data) ;
     }
 
@@ -49,7 +51,8 @@ const Content = () => {
     const response = await fetch(`https://api-test-buddy.glitch.me/api/accounts/by_owner_id?owner_id=${user.nickname}`);
     const data = await response.json();
     console.log(data);
-    setAccount(data) ;
+    if(data.length>0)
+      setAccount(data) ;
   }
   }, []);
 
@@ -95,7 +98,7 @@ return (
           </Alert>
         )}
 
-        {account[0].restricted_transaction != null && (
+        {(account[0].restricted_transaction != (null || "null") )&& (
           <Alert color="warning" >
             Your parent has set a restriction on your {account[0].restricted_transaction} purchases!
             

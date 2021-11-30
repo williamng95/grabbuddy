@@ -111,9 +111,6 @@ const Footer = () => {
       const data = await response.json();
 
       (data) ? alert("Transaction Successful!") : alert("Transaction Not Successful!");
-
-
-
       window.location.reload(false);
 
     }

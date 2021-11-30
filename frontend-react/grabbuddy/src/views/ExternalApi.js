@@ -4,6 +4,7 @@ import { getConfig } from "../config";
 import Loading from "../components/Loading";
 import  UpdateLimit  from "../components/UpdateLimit";
 import UpdateRestriction from "../components/UpdateRestriction";
+import AddSourceTransaction from "../components/AddSourceTransaction";
 
 export const ExternalApiComponent = () => {
 
@@ -11,6 +12,7 @@ export const ExternalApiComponent = () => {
     <>
       <UpdateLimit />
       <UpdateRestriction />
+      <AddSourceTransaction/>
     </>
   );
 };
