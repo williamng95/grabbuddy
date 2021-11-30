@@ -36,6 +36,13 @@ const Footer = () => {
     const [tamt, setTamt] = useState("");
     const [tpayee, setTpayee] = useState("");
     const [balance, setBalance] = useState(0);
+    const [account, setAccount] = useState([{id:0,
+      owner_id: 0,
+      type: null,
+      wallet_limit: 0,
+      wallet_balance: 0,
+      restricted_transaction: [],
+      allowed_transaction: []}]);
 
     const {
       user
@@ -45,12 +52,18 @@ const Footer = () => {
       getTransCat();
       getPayee();
       getBalance();
+      getAccount();
+
+      
+
+         
   
       // we will use async/await to fetch this data
       async function getTransCat() {
           const response = await fetch("https://api-test-buddy.glitch.me/api/transactions/categories");
           const data = await response.json();
           setTransCat(data) ;
+ 
       }
       // we will use async/await to fetch this data
       async function getPayee() {
@@ -65,6 +78,19 @@ const Footer = () => {
         const data = await response.json();
         console.log(data);
         setBalance(data) ;
+      }
+
+      async function getAccount() {
+        const response = await fetch(`https://api-test-buddy.glitch.me/api/accounts/by_owner_id?owner_id=${user.nickname}`);
+        const data = await response.json();
+        console.log(data);
+   
+        setAccount(data) ;
+
+      var index = transCat.indexOf(account[0].restricted_transaction);
+      if (index > -1) { //Make sure item is present in the array, without if condition, -n indexes will be considered from the end of the array.
+        transCat.splice(index, 1);
+      }
       }
 
       }, []);

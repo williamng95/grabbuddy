@@ -79,8 +79,8 @@ useEffect(() => {
                     
                       {users && (
                       <select name="selectUser">
-                        {users.map((user, index) => (
-                          <option key={index} value={user.id} onChange={handleChange} >{user.id}</option>
+                        {users.map((u, index) => (
+                          <option key={index} value={u.id} onChange={handleChange} >{u.id}</option>
                         ))}
 
                       </select>

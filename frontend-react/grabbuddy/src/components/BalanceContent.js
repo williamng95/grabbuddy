@@ -73,9 +73,23 @@ calculateFoodTotal(){
   return total;
 }
 
+calculateSourceTotal(){
+  let total = 0;
+  for(var i=0;i<this.state.transactionData.length;i++){
+    if(this.state.transactionData[i].category === "SOURCE")
+    total += this.state.transactionData[i].transaction_amount;
+  }
+  return total;
+}
+
 calculateOthersTotal(){
 
-  return this.calculateTotal() - this.calculateFoodTotal() - this.calculateGameTotal();
+  return this.calculateSpendingsTotal() - this.calculateFoodTotal() - this.calculateGameTotal();
+}
+
+calculateSpendingsTotal(){
+
+  return this.calculateTotal() - this.calculateSourceTotal() ;
 }
   
   render() {
@@ -86,7 +100,7 @@ calculateOthersTotal(){
         <div className="next-steps p-5">
         <Card className="text-center mb-5 h-100 w-100'"  style={{cursor : 'pointer' }}>
           
-          <CardHeader className="">You have spent $ {this.calculateTotal()} this month!</CardHeader>
+          <CardHeader className="h1">You have spent $ {this.calculateSpendingsTotal()} this month!</CardHeader>
           
           <Row>
             <Col></Col>
@@ -95,8 +109,18 @@ calculateOthersTotal(){
           
           <Row className="d-flex justify-content-between">
             <Col md={5}  className="mb-4 d-flex align-items-center h-100 w-100">
+            {/* <Progress  color="success" value={this.calculateGameTotal()/this.calculateTotal()*100} className="mb-4">
+                Gaming
+              </Progress>
+              <Progress  color="info" value={this.calculateFoodTotal()/this.calculateTotal()*100} className="mb-4">
+                Food
+              </Progress>
+              <Progress  color="warning" value={this.calculateOthersTotal()/this.calculateTotal()*100} >
+                Others
+              </Progress> */}
             <Chart
- 
+   width={400}
+   height={300}
   chartType="PieChart"
   loader={<div>Loading Chart</div>}
   data={[
@@ -110,18 +134,29 @@ calculateOthersTotal(){
   }}
   rootProps={{ 'data-testid': '1' }}
 />
+
+
             </Col>
             <Col md={5} className="mb-4 align-items-center h-100 w-100">
               
-              <Progress  color="success" value={this.calculateGameTotal()/this.calculateTotal()*100} className="mb-4">
-                Gaming
-              </Progress>
-              <Progress  color="info" value={this.calculateFoodTotal()/this.calculateTotal()*100} className="mb-4">
-                Food
-              </Progress>
-              <Progress  color="warning" value={this.calculateOthersTotal()/this.calculateTotal()*100} className="mb-4">
-                Others
-              </Progress>
+            <Chart
+   width={400}
+   height={300}
+ chartType="PieChart"
+ loader={<div>Loading Chart</div>}
+ data={[
+   ['Balance', 'Amount in $'],
+   ['Source', this.calculateSourceTotal()],
+   ['Spendings', this.calculateSpendingsTotal()],
+ ]}
+ options={{
+   title: 'Your Balance Breakdown',
+ }}
+ rootProps={{ 'data-testid': '1' }}
+/>
+
+
+
             </Col>
           </Row>
 

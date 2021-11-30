@@ -29,8 +29,8 @@ const Content = () => {
   type: null,
   wallet_limit: 0,
   wallet_balance: 0,
-  restricted_transaction: null,
-  allowed_transaction: null}]);
+  restricted_transaction: [],
+  allowed_transaction: []}]);
 
   useEffect(() => {
     getBalance();
@@ -92,6 +92,13 @@ return (
         {account[0].wallet_limit >0 && (
           <Alert color="warning" >
             You got a limit of ${account[0].wallet_limit} set by your parent!
+          </Alert>
+        )}
+
+        {account[0].restricted_transaction != null && (
+          <Alert color="warning" >
+            Your parent has set a restriction on your {account[0].restricted_transaction} purchases!
+            
           </Alert>
         )}
 
