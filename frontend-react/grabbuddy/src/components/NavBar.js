@@ -73,21 +73,7 @@ useEffect(() => {
                     Home
                   </NavLink>
                 </NavItem>
-                {isAuthenticated && (
-                  <NavItem>
-                    Select User
-                    
-                      {users && (
-                      <select name="selectUser">
-                        {users.map((u, index) => (
-                          <option key={index} value={u.id} onChange={handleChange} >{u.id}</option>
-                        ))}
 
-                      </select>
-                      )}
-                    
-                  </NavItem>
-                )}
                 {/* {isAuthenticated && (
       <NavItem>
         <NavLink
