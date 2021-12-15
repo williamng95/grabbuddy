@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
+    "start": "serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
     "eject": "react-scripts eject",
@@ -29,6 +29,7 @@
     "@mui/material": "^5.2.1",
     "bootstrap": "^5.1.3",
     "cors": "^2.8.5",
+    "ethers": "^5.5.2",
     "express": "^4.16.4",
     "express-jwt": "^6.0.0",
     "helmet": "^3.18.0",
