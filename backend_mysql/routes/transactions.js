@@ -6,29 +6,6 @@ var table = 'transactions';
 var table2 = 'transaction_categories';
 var table3 = 'accounts';
 
-router.get('/categories', function (req, res, next) {
-    query(`select * from ${table2}`, res)
-});
-
-router.get('/all', function (req, res, next) {
-    query(`select * from ${table}`, res)
-});
-
-
-router.get('/by-tid', function (req, res, next) {
-    if (req.query.id.length === 0 || isNaN(req.query.id)) {
-        console.log(`Invalid ID received. ID: ${req.query.id}`);
-        res.status(400).send(`Invalid ID ${req.query.id} received.`);
-        return;
-
-    } else {
-        query(`select *
-        from ${table}
-        where id = ${req.query.id}`, res)
-    }
-});
-
-
 router.get('/category', function (req, res, next) {
     if (req.query.cat.length === 0) {
         console.log(`Invalid ID received. ID: ${req.query.id}`);
@@ -41,6 +18,54 @@ router.get('/category', function (req, res, next) {
         where category = '${req.query.cat}'`, res)
     }
 });
+
+router.get('/categories', function (req, res, next) {
+    query(`select * from ${table2}`, res)
+});
+
+router.get('/all', function (req, res, next) {
+    query(`select * from ${table}`, res)
+});
+
+router.get('/by-tid', function (req, res, next) {
+    if (req.query.id.length === 0 || isNaN(req.query.id)) {
+        res.status(400).send(`Invalid ID ${req.query.id} received.`);
+        return;
+
+    } else {
+        query(`select *
+        from ${table}
+        where id = ${req.query.id}`, res)
+    }
+});
+
+router.get('/query', function (req, res, next) {
+    let querytext = '';
+    let keyword = 'WHERE ';
+        //process id first
+        querytext = `SELECT * FROM ${table} `
+        if (isNaN(req.query.payerid)==false) {
+            querytext = querytext + ` ${keyword} payer_id=${req.query.payerid}`
+            keyword = ' AND '
+        }    
+        if (isNaN(req.query.payeeid)==false) {
+            querytext = querytext + ` ${keyword} payee_id=${req.query.payeeid}`;
+            keyword = ' AND '
+        }
+     
+        if (isNaN(req.query.days)==false) {
+            querytext = querytext + ` ${keyword} create_time >= NOW() - INTERVAL ${req.query.days} DAY `
+            keyword = ' AND '
+       }
+
+        if ((req.query.category)) {
+            querytext = querytext + ` ${keyword} category='${req.query.category}'`;
+            keyword = ' AND '
+        }
+        query(querytext, res);
+});
+
+//SELECT * FROM transactions WHERE create_time >= NOW() - INTERVAL 30 DAY AND payer_id=6 AND category='GAME';
 
 router.delete('/delete', function (req, res, next) {
     if (req.query.id.length === 0 || isNaN(req.query.id)) {
@@ -84,17 +109,6 @@ router.patch('/update', function (req, res, next) {
         query(querytext, res);
     }
 });
-
-function check_restrictions(account_id) {
-    let restrictions = null
-    query(`select restricted_transaction 
-        from accounts 
-        where id = ${account_id}`, null, async (records) => { restrictions = await records })
-    console.log(restrictions)
-
-
-}
-
 
 router.post('/add', function (req, res, next) {
     const newrow = req.body;

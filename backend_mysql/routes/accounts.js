@@ -21,7 +21,9 @@ router.get('/all', function (req, res, next) {
 // create account
 router.post('/create_account', function (req, res, next) {
     // minimally required fields
-    let reqFields = ['owner_id', 'type']
+    //let reqFields = ['owner_id', 'type']
+    let reqFields = ['owner_id', 'type','wallet_limit','wallet_balance','restricted_transaction']
+    
     // check all required fields are present
     if (!(reqFields.every((field)=>{
         return req.body.hasOwnProperty(field)
@@ -45,7 +47,7 @@ router.post('/create_account', function (req, res, next) {
 })
 
 // accounts by user id
-router.get('/by_uid', function (req, res, next) {
+router.get('/by_owner_id', function (req, res, next) {
     var uid = req.query.owner_id
     if (!uid) {
         res.status(400).send('no owner id found')
@@ -56,6 +58,29 @@ router.get('/by_uid', function (req, res, next) {
 
 })
 
+// get balance by owner id
+router.get('/balance_by_owner_id', function (req, res, next) {
+    var id = req.query.owner_id
+    if (!id) {
+        res.status(400).send('no account id found')
+    }
+    else {
+        query(`select wallet_balance from accounts where owner_id=${id}`, res)
+    }
+
+})
+
+// accounts by account id
+router.get('/by_id', function (req, res, next) {
+    var id = req.query.account_id
+    if (!id) {
+        res.status(400).send('no owner id found')
+    }
+    else {
+        query(`select * from accounts where id=${id}`, res)
+    }
+
+})
 
 // get balance by account id
 router.get('/balance_by_id', function (req, res, next) {
