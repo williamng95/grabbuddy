@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from 'react'
-import {ethers} from 'ethers'
+import React, { useState, useEffect } from 'react'
+import { ethers } from 'ethers'
+import bootstrap from 'bootstrap'
 
 
 const WalletCardEthers = () => {
@@ -7,7 +8,7 @@ const WalletCardEthers = () => {
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [defaultAccount, setDefaultAccount] = useState(null);
 	const [userBalance, setUserBalance] = useState(null);
-	const [connButtonText, setConnButtonText] = useState('Connect Wallet');
+	const [connButtonText, setConnButtonText] = useState('Connect to MetaMask');
 	//const [tokenButtonText, setTokenButtonText] = useState('Display Token');
 	const [provider, setProvider] = useState(null);
 	const [grabContract, setGrabContract] = useState(null);
@@ -294,8 +295,8 @@ const WalletCardEthers = () => {
 				"stateMutability": "nonpayable",
 				"type": "function"
 			}
-		]	,
-	  };
+		],
+	};
 
 	const connectWalletHandler = () => {
 
@@ -304,25 +305,26 @@ const WalletCardEthers = () => {
 			setProvider(new ethers.providers.Web3Provider(window.ethereum));
 			console.log(provider);
 			// connect to metamask
-			window.ethereum.request({ method: 'eth_requestAccounts'})
-			.then(result => {
-				setConnButtonText('Wallet Connected');
-				setDefaultAccount(result[0]);
-			})
-			.catch(error => {
-				setErrorMessage(error.message);
-			});
+			window.ethereum.request({ method: 'eth_requestAccounts' })
+				.then(result => {
+					setConnButtonText('Wallet Connected');
+					setDefaultAccount(result[0]);
+
+				}).then(displayTokenHandler)
+				.catch(error => {
+					setErrorMessage(error.message);
+				});
 
 
 
-		} else if (!window.ethereum){
+		} else if (!window.ethereum) {
 			console.log('Need to install MetaMask');
 			setErrorMessage('Please install MetaMask browser extension to interact');
 		}
 	}
 
 	const displayTokenHandler = () => {
-		if (grabContract != null){
+		if (grabContract != null) {
 
 			async function getSymbol() {
 				let symbol = await grabContract.symbol();
@@ -330,7 +332,7 @@ const WalletCardEthers = () => {
 			}
 			let symbol = getSymbol();
 			symbol.then(x => setGrabSymbol(x.toString()));
-	
+
 			async function getDecimal() {
 				let decimal = await grabContract.decimals();
 				return decimal;
@@ -350,57 +352,83 @@ const WalletCardEthers = () => {
 
 	}
 
-useEffect(() => {
-	if(defaultAccount){
-	provider.getBalance(defaultAccount)
-	.then(balanceResult => {
-		setUserBalance(ethers.utils.formatEther(balanceResult));
-	})
-	let noProviderAbort = true;
-	let signer;
-
-
-	
-	try{
-		signer = provider.getSigner();
-		console.log(signer);
-		setGrabContract(new ethers.Contract(grabToken.address, grabToken.abi, signer));
-
-		noProviderAbort = false;
-	} catch(e) {
-		noProviderAbort = true;
-		console.log(e);
-	}
+	useEffect(() => {
+		if (defaultAccount) {
+			provider.getBalance(defaultAccount)
+				.then(balanceResult => {
+					setUserBalance(ethers.utils.formatEther(balanceResult));
+				})
+			let noProviderAbort = true;
+			let signer;
 
 
 
+			try {
+				signer = provider.getSigner();
+				console.log(signer);
+				setGrabContract(new ethers.Contract(grabToken.address, grabToken.abi, signer));
 
-	};
+				noProviderAbort = false;
+			} catch (e) {
+				noProviderAbort = true;
+				console.log(e);
+			}
 
 
-}, [defaultAccount]);
-	
+
+
+		};
+
+
+	}, [defaultAccount]);
+
+	let coinObj = [
+		{
+			"name": "ethereum",
+			"symbol": "ETH",
+			"decimal": 18,
+			"balance": userBalance
+		},
+		{
+			"name": "grabToken",
+			"symbol": grabSymbol,
+			"decimal": grabDecimal,
+			"balance": grabBalance
+		}
+	]
+
+
+
 	return (
-		<div className='walletCard'>
-		<h4> Connection to MetaMask</h4>
-			<button onClick={connectWalletHandler}>{connButtonText}</button>
-			<div className='accountDisplay'>
-				<h3>Address: {defaultAccount}</h3>
-			</div>
-			<div className='balanceDisplay'>
-				<h3>Ether Balance: {userBalance}</h3>
-			</div>
-			{defaultAccount &&	
-				<><button onClick={displayTokenHandler}>Display Token</button><div className='TokenBalanceDisplay'>
-					<h3>Symbol: {grabSymbol}</h3>
-					<h3>Decimal: {grabDecimal}</h3>
-					<h3>GBT Balance: {grabBalance}</h3>
-				</div>
-				</>
-			}	
+		<div className='walletCard m-3'>
+			{
+				Boolean(defaultAccount)
+					? <div className="container m-3 mx-auto" style={{ width: "20rem" }}>
+						<div className="d-flex justify-content-center">
+							<button className='btn btn-primary' onClick={displayTokenHandler}>Display Token</button>
+						</div>
+						{coinObj.map((token) => {
+							return (
+								token.symbol &&
+								<div className="row justify-content-center m-3">
+									<div className="card" style={{ width: "18rem" }}>
+										<div className="card-body">
+											<h5 className="card-title">{token.symbol}</h5>
+											<h6 className="card-subtitle mb-2 text-muted">{token.name}</h6>
+											<p className="card-text">{`Balance: ${token.balance}`}</p>
+										</div>
+									</div>
+								</div>)
+						})}
+						<div className="d-flex justify-content-center">
+							<p>{`${defaultAccount}`}</p>
+						</div>
+					</div>
+					: <div className="d-flex justify-content-center">
+						<button className='btn btn-primary' onClick={connectWalletHandler}>{connButtonText}</button>
+					</div>
 
-
-			
+			}
 			{errorMessage}
 		</div>
 	);
