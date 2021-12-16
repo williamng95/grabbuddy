@@ -68,7 +68,7 @@ router.get('/query', function (req, res, next) {
 //SELECT * FROM transactions WHERE create_time >= NOW() - INTERVAL 30 DAY AND payer_id=6 AND category='GAME';
 
 router.delete('/delete', function (req, res, next) {
-    if (isNaN(req.query.id)) {
+    if (req.query.id.length === 0 || isNaN(req.query.id)) {
         console.log(`Invalid ID received. ID: ${req.query.id}`);
         res.status(400).send(`Invalid ID ${req.query.id} received.`);
         return;
@@ -83,7 +83,7 @@ router.delete('/delete', function (req, res, next) {
 router.patch('/update', function (req, res, next) {
     const id = req.query.id;
 
-    if (isNaN(req.query.id)) {
+    if (req.query.id.length === 0 || isNaN(req.query.id)) {
         console.log(`Invalid ID received. ID: ${req.query.id}`);
         res.status(400).send(`Invalid ID ${req.query.id} received.`);
         return;
@@ -122,22 +122,22 @@ router.post('/add', function (req, res, next) {
         from accounts 
         where id = ${newrow.payer_id}`, null, (restrictions) => {
             console.log(restrictions[0].restricted_transaction)
-                if (newrow.category == restrictions[0].restricted_transaction) {
-                    console.log('restricted transaction')
-                    res.status(400).send('restricted transaction')
-                    return
-                }
-                else {
-                    const newquery = `
-                    INSERT INTO ${table} (category,transaction_amount,payer_id,payee_id)
-                    VALUES ('${newrow.category}','${newrow.transaction_amount}','${newrow.payer_id}','${newrow.payee_id}');
-                    UPDATE ${table3} SET wallet_balance = wallet_balance -${newrow.transaction_amount} WHERE id=${newrow.payer_id}; 
-                    UPDATE ${table3} SET wallet_balance = wallet_balance +${newrow.transaction_amount} WHERE id=${newrow.payee_id}; 
-                    `;
+            if (newrow.category == restrictions[0].restricted_transaction) {
+                console.log('restricted transaction')
+                res.status(400).send('restricted transaction')
+                return
+            }
+            else {
+                const newquery = `
+                INSERT INTO ${table} (category,transaction_amount,payer_id,payee_id)
+                VALUES ('${newrow.category}','${newrow.transaction_amount}','${newrow.payer_id}','${newrow.payee_id}');
+                UPDATE ${table3} SET wallet_balance = wallet_balance -${newrow.transaction_amount} WHERE id=${newrow.payer_id}; 
+                UPDATE ${table3} SET wallet_balance = wallet_balance +${newrow.transaction_amount} WHERE id=${newrow.payee_id}; 
+                `;
 
-                    query(newquery, res);
-                    return ('Tranasction created');
-                }
+                query(newquery, res);
+                return ('Tranasction created');
+            }
 
         })
 
